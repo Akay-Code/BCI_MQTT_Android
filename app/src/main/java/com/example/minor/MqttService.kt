@@ -10,7 +10,9 @@ import org.eclipse.paho.client.mqttv3.*
 
 class MqttService : Service() {
     private lateinit var mqttAndroidClient: MqttAndroidClient
-    private val serverUri = "tcp://bcibroker.local:1883"
+//    private val serverUri = "tcp://bcibroker.local:1883"
+//    private val serverUri = "tcp://192.168.228.179:1883"
+    private val serverUri = "tcp://192.168.1.37:1883"
     private val clientId = "AndroidClient"
 
     // List of topics to subscribe to

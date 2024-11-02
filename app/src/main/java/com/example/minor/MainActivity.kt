@@ -32,11 +32,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var btnMoveLeft: ImageButton
     private lateinit var btnMoveRight: ImageButton
+    private lateinit var btnCurr : Button
 
     private var isBtnLeftVisible = true
     private var isBtnRightVisible = true
+    private var isbtnCurrVisible = true
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+//    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,9 +49,11 @@ class MainActivity : AppCompatActivity() {
 
         btnMoveLeft = findViewById(R.id.btnBackward)
         btnMoveRight = findViewById(R.id.btnForward)
+        btnCurr = findViewById(R.id.btnCurrentElement)
 
-        startFlicker10Hz()
-        startFlicker15Hz()
+        startFlicker13Hz()
+        startFlicker17Hz()
+        startFlicker21Hz()
 
         espDevices.add("default" to "NO DEVICES")
 
@@ -74,15 +78,15 @@ class MainActivity : AppCompatActivity() {
                 if(espDevices.isNotEmpty()){
                     when (message) {
                         "0" -> {
-                            moveBackward(findViewById(R.id.btnCurrentElement))
+                            moveBackward(btnCurr)
                             Toast.makeText(this,"Received 0: Moved Left",Toast.LENGTH_SHORT).show()
                         }
                         "1" -> {
-                            moveForward(findViewById(R.id.btnCurrentElement))
+                            moveForward(btnCurr)
                             Toast.makeText(this,"Received 1: Moved Right",Toast.LENGTH_SHORT).show()
                         }
                         "2" -> {
-                            selectButton(findViewById(R.id.btnCurrentElement))
+                            selectButton(btnCurr)
                             Toast.makeText(this,"Received 2: Device Selected",Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -220,25 +224,35 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mqttReceiver)
     }
 
-    // Flicker ImageButton at 10Hz
-    private fun startFlicker10Hz() {
+    private fun startFlicker13Hz() {
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                btnCurr.setBackgroundColor(if (isbtnCurrVisible) Color.TRANSPARENT else getColor(R.color.buttonColor))
+                isbtnCurrVisible = !isbtnCurrVisible
+                handler.postDelayed(this, 76L)
+            }
+        }, 76L)
+    }
+
+    // Flicker ImageButton at 17Hz
+    private fun startFlicker17Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {
                 btnMoveLeft.visibility = if (isBtnLeftVisible)  View.INVISIBLE else View.VISIBLE
                 isBtnLeftVisible = !isBtnLeftVisible
-                handler.postDelayed(this, 50L) // 10 Hz = 50ms on + off
+                handler.postDelayed(this, 58L) // 10 Hz = 50ms on + off
             }
-        }, 50L)
+        }, 58L)
     }
 
     // Flicker ImageButton at 15Hz
-    private fun startFlicker15Hz() {
+    private fun startFlicker21Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {
                 btnMoveRight.visibility = if (isBtnRightVisible) View.INVISIBLE else View.VISIBLE
                 isBtnRightVisible = !isBtnRightVisible
-                handler.postDelayed(this, 34L) // 15 Hz = ~34ms on + off
+                handler.postDelayed(this, 47L) // 15 Hz = ~34ms on + off
             }
-        }, 34L)
+        }, 47L)
     }
 }

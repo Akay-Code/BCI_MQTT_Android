@@ -25,12 +25,14 @@ class MainActivity2 : AppCompatActivity() {
 
     private lateinit var largeButton1: Button
     private lateinit var largeButton2: Button
+    private lateinit var smallButton: Button
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var mqttService: MqttService
     private var isBound = false
 
     private var isButton1Visible = true
     private var isButton2Visible = true
+    private var isSmallButtonVisible = true
     private lateinit var mqttReceiver: BroadcastReceiver
     private val messageHandler = Handler(Looper.getMainLooper())
 
@@ -48,10 +50,20 @@ class MainActivity2 : AppCompatActivity() {
 
         toggleBtn = findViewById(R.id.stateToggleButton)
 
+        val sharedPref = getSharedPreferences("device_states", Context.MODE_PRIVATE)
+        val savedState = sharedPref.getBoolean("$espId/$deviceSelected", false)
+        toggleBtn.isChecked = savedState // Set the toggle button state
+
         toggleBtn.setOnCheckedChangeListener { _, isChecked ->
             if (isBound) {
                 val message = if (isChecked) "1" else "0" // 1 for ON, 0 for OFF
                 mqttService.publishMessage("$espId/$deviceSelected", message)
+
+                val sharedPref = getSharedPreferences("device_states", Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putBoolean("$espId/$deviceSelected", isChecked)
+                    apply()
+                }
             } else {
                 Toast.makeText(this, "Service not bound", Toast.LENGTH_SHORT).show()
             }
@@ -59,9 +71,11 @@ class MainActivity2 : AppCompatActivity() {
 
         largeButton1 = findViewById(R.id.largeButton1)
         largeButton2 = findViewById(R.id.largeButton2)
+        smallButton = findViewById(R.id.backButton)
 
-        startFlicker10Hz()
-        startFlicker15Hz()
+        startFlicker13Hz()
+        startFlicker17Hz()
+        startFlicker21hz()
 
         Intent(this, MqttService::class.java).also { intent ->
             bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -128,24 +142,34 @@ class MainActivity2 : AppCompatActivity() {
         unregisterReceiver(mqttReceiver)
     }
 
-    private fun startFlicker10Hz() {
+    private fun startFlicker13Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {
                 largeButton1.setBackgroundColor(if (isButton1Visible) Color.TRANSPARENT else getColor(R.color.buttonColor))
                 isButton1Visible = !isButton1Visible
-                handler.postDelayed(this, 50L)
+                handler.postDelayed(this, 76L)
             }
-        }, 50L)
+        }, 76L)
     }
 
-    private fun startFlicker15Hz() {
+    private fun startFlicker17Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {
                 largeButton2.setBackgroundColor(if (isButton2Visible) Color.TRANSPARENT else getColor(R.color.buttonColor))
                 isButton2Visible = !isButton2Visible
-                handler.postDelayed(this, 34L)
+                handler.postDelayed(this, 58L)
             }
-        }, 34L)
+        }, 58L)
+    }
+
+    private fun startFlicker21hz(){
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                smallButton.setBackgroundColor(if (isSmallButtonVisible) Color.TRANSPARENT else getColor(R.color.buttonColor))
+                isSmallButtonVisible = !isSmallButtonVisible
+                handler.postDelayed(this, 47L)
+            }
+        }, 47L)
     }
 
     override fun onDestroy() {

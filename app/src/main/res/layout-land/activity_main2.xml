@@ -11,33 +11,49 @@
     <Button
         android:id="@+id/largeButton1"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
+        android:layout_height="200dp"
+        android:layout_margin="30dp"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
         android:padding="16dp"
-        android:text="10 Hz"
+        android:text="17 Hz"
+        android:layout_gravity="center"
         android:textColor="@color/buttonTextColor"
         android:textSize="20sp" />
 
     <!-- Inner LinearLayout for TextView and ToggleButton -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="13 Hz"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/buttonTextColor"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            />
+
         <TextView
             android:id="@+id/deviceNameTextView"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="0dp"
             android:text="DeviceName"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textColor="@color/white"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:gravity="center"
+            android:layout_gravity="center"
             />
 
         <ToggleButton
@@ -51,7 +67,7 @@
             android:textSize="24sp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_weight="2"
+            android:layout_weight="1"
             />
     </LinearLayout>
 
@@ -59,12 +75,14 @@
     <Button
         android:id="@+id/largeButton2"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="200dp"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
         android:padding="16dp"
-        android:text="15 Hz"
+        android:text="21 Hz"
+        android:layout_margin="30dp"
         android:textColor="@color/buttonTextColor"
+        android:layout_gravity="center"
         android:textSize="20sp" />
 
 </LinearLayout>
