@@ -75,7 +75,7 @@ class MainActivity2 : AppCompatActivity() {
 
         startFlicker13Hz()
         startFlicker17Hz()
-        startFlicker21hz()
+        startFlicker21Hz()
 
         Intent(this, MqttService::class.java).also { intent ->
             bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -142,34 +142,34 @@ class MainActivity2 : AppCompatActivity() {
         unregisterReceiver(mqttReceiver)
     }
 
-    private fun startFlicker13Hz() {
+    private fun startFlicker17Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {
                 largeButton1.setBackgroundColor(if (isButton1Visible) Color.TRANSPARENT else getColor(R.color.buttonColor))
                 isButton1Visible = !isButton1Visible
-                handler.postDelayed(this, 76L)
-            }
-        }, 76L)
-    }
-
-    private fun startFlicker17Hz() {
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                largeButton2.setBackgroundColor(if (isButton2Visible) Color.TRANSPARENT else getColor(R.color.buttonColor))
-                isButton2Visible = !isButton2Visible
                 handler.postDelayed(this, 58L)
             }
         }, 58L)
     }
 
-    private fun startFlicker21hz(){
+    private fun startFlicker21Hz() {
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                largeButton2.setBackgroundColor(if (isButton2Visible) Color.TRANSPARENT else getColor(R.color.buttonColor))
+                isButton2Visible = !isButton2Visible
+                handler.postDelayed(this, 47L)
+            }
+        }, 47L)
+    }
+
+    private fun startFlicker13Hz(){
         handler.postDelayed(object : Runnable {
             override fun run() {
                 smallButton.setBackgroundColor(if (isSmallButtonVisible) Color.TRANSPARENT else getColor(R.color.buttonColor))
                 isSmallButtonVisible = !isSmallButtonVisible
-                handler.postDelayed(this, 47L)
+                handler.postDelayed(this, 76L)
             }
-        }, 47L)
+        }, 76L)
     }
 
     override fun onDestroy() {
