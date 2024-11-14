@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity() {
     private fun startFlicker13Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {
-                btnCurr.setBackgroundColor(if (isbtnCurrVisible) Color.TRANSPARENT else getColor(R.color.buttonColor))
+                btnCurr.visibility = if (isbtnCurrVisible) View.INVISIBLE else View.VISIBLE
                 isbtnCurrVisible = !isbtnCurrVisible
                 handler.postDelayed(this, 76L)
             }
@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity() {
         }, 58L)
     }
 
-    // Flicker ImageButton at 15Hz
+    // Flicker ImageButton at 21Hz
     private fun startFlicker21Hz() {
         handler.postDelayed(object : Runnable {
             override fun run() {

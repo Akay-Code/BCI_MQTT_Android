@@ -2,6 +2,8 @@ package com.example.minor
 
 import android.app.Service
 import android.content.Intent
+import android.net.nsd.NsdManager
+import android.net.nsd.NsdServiceInfo
 import android.os.Binder
 import android.os.IBinder
 import android.widget.Toast
@@ -10,10 +12,10 @@ import org.eclipse.paho.client.mqttv3.*
 
 class MqttService : Service() {
     private lateinit var mqttAndroidClient: MqttAndroidClient
-//    private val serverUri = "tcp://bcibroker.local:1883"
-//    private val serverUri = "tcp://192.168.228.179:1883"
-    private val serverUri = "tcp://192.168.1.37:1883"
+    private lateinit var nsdManager: NsdManager
     private val clientId = "AndroidClient"
+    private var serverUri: String? = null
+    private val serviceType = "_mqtt._tcp." // Adjust based on your service
 
     // List of topics to subscribe to
     private val subscriptionTopics = listOf("DAQ", "esp/devices")
@@ -26,18 +28,60 @@ class MqttService : Service() {
         return LocalBinder()
     }
 
-    // Constants for publishing messages
-    private val PUBLISH_TOPIC = "testTopic"  // Change this to your desired publish topic
-    private val PUBLISH_MESSAGE = "Hello, MQTT!"  // Change this to the message you want to publish
-
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        mqttAndroidClient = MqttAndroidClient(applicationContext, serverUri, clientId)
-        setupMqttClient()
+        nsdManager = getSystemService(NsdManager::class.java) as NsdManager
+        discoverNsdService()  // Start NSD discovery for MQTT server
         return START_STICKY
     }
 
+    private fun discoverNsdService() {
+        nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.DiscoveryListener {
+            override fun onDiscoveryStarted(serviceType: String) {
+                Toast.makeText(this@MqttService, "NSD Discovery Started", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onServiceFound(service: NsdServiceInfo) {
+                if (service.serviceType == serviceType) {
+                    nsdManager.resolveService(service, object : NsdManager.ResolveListener {
+                        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
+                            Toast.makeText(this@MqttService, "NSD Resolve Failed", Toast.LENGTH_SHORT).show()
+                        }
+
+                        override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
+                            val host = serviceInfo.host.hostAddress  // Get the IP address of `eeg.local`
+                            val port = serviceInfo.port
+                            serverUri = "tcp://$host:$port"  // Set MQTT URI based on resolved IP and port
+                            setupMqttClient()
+                        }
+                    })
+                }
+            }
+
+            override fun onServiceLost(service: NsdServiceInfo) {
+                Toast.makeText(this@MqttService, "NSD Service Lost", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDiscoveryStopped(serviceType: String) {
+                Toast.makeText(this@MqttService, "NSD Discovery Stopped", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
+                nsdManager.stopServiceDiscovery(this)
+            }
+
+            override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {
+                nsdManager.stopServiceDiscovery(this)
+            }
+        })
+    }
+
     private fun setupMqttClient() {
+        if (serverUri == null) {
+            Toast.makeText(this, "Server URI not resolved yet", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        mqttAndroidClient = MqttAndroidClient(applicationContext, serverUri!!, clientId)
         val mqttConnectOptions = MqttConnectOptions().apply {
             isAutomaticReconnect = true
             isCleanSession = false

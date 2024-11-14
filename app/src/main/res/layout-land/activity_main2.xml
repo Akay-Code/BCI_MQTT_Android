@@ -11,14 +11,13 @@
     <Button
         android:id="@+id/largeButton1"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_margin="30dp"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
-        android:padding="16dp"
-        android:text="17 Hz"
+        android:text="On\n17 Hz"
         android:layout_gravity="center"
-        android:textColor="@color/buttonTextColor"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 
     <!-- Inner LinearLayout for TextView and ToggleButton -->
@@ -27,16 +26,18 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:layout_margin="20dp"
+        android:gravity="center_vertical"
+        >
 
         <Button
             android:id="@+id/backButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="13 Hz"
+            android:text="Back\n13 HZ"
             android:backgroundTint="@color/white"
-            android:textColor="@color/buttonTextColor"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:layout_gravity="center"
             android:gravity="center"
@@ -61,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/toggle_button_background"
-            android:padding="16dp"
+            android:layout_margin="10dp"
             android:textOff="OFF"
             android:textOn="ON"
             android:textSize="24sp"
@@ -75,13 +76,12 @@
     <Button
         android:id="@+id/largeButton2"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
-        android:padding="16dp"
-        android:text="21 Hz"
+        android:text="OFF\n21 Hz"
         android:layout_margin="30dp"
-        android:textColor="@color/buttonTextColor"
+        android:textColor="@color/black"
         android:layout_gravity="center"
         android:textSize="20sp" />
 
